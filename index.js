@@ -16,7 +16,7 @@ const {
   logincheck,
   wspayload,
   basketOrderPayload,
-  ocpKey
+  ocpKey,
 } = require("./const");
 const { AES128Encrypt, AES256Encrypt } = require("./utils");
 
@@ -119,7 +119,7 @@ function FivePaisaClient(conf) {
     IOCOrder: false,
     price: 0,
     scripCode: "",
-    scripData: ""
+    scripData: "",
   };
   const defaultbocoParams = {
     TrailingSL: 0,
@@ -135,7 +135,7 @@ function FivePaisaClient(conf) {
     AtMarket: false,
     UniqueOrderIDNormal: "",
     UniqueOrderIDSL: "",
-    UniqueOrderIDLimit: ""
+    UniqueOrderIDLimit: "",
   };
 
   const basketOrderParams = {
@@ -148,18 +148,19 @@ function FivePaisaClient(conf) {
     AHPlaced: "N",
     PublicIP: "0.0.0.0",
     DisQty: "0",
-    iOrderValidity: 0
+    iOrderValidity: 0,
   };
   // Request instance to be used throughout, with cookie support.
   const request_instance = axios.create({
     baseURL: BASE_URL,
     jar: cookieJar,
-    withCredentials: true
+    withCredentials: true,
   });
   request_instance.defaults.headers.common["Content-Type"] = "application/json";
-  request_instance.defaults.headers.common["Authorization"] =
-    "Bearer " + accessToken;
-
+  if (accessToken) {
+    request_instance.defaults.headers.common["Authorization"] =
+      "Bearer " + accessToken;
+  }
   /**
    * Handles the response from the login method and returns a promise.
    * @method init
@@ -255,7 +256,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(HOLDINGS_ROUTE, payload).then(response => {
+        request_instance.post(HOLDINGS_ROUTE, payload).then((response) => {
           if (response.data.body.Data.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -286,7 +287,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(ORDER_BOOK_ROUTE, payload).then(response => {
+        request_instance.post(ORDER_BOOK_ROUTE, payload).then((response) => {
           if (response.data.body.OrderBookDetail.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -318,7 +319,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(MARGIN_ROUTE, payload).then(response => {
+        request_instance.post(MARGIN_ROUTE, payload).then((response) => {
           if (response.data.body.EquityMargin.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -349,7 +350,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(POSITIONS_ROUTE, payload).then(response => {
+        request_instance.post(POSITIONS_ROUTE, payload).then((response) => {
           if (response.data.body.NetPositionDetail.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -385,18 +386,18 @@ function FivePaisaClient(conf) {
 
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwttoken}`
+        Authorization: `Bearer ${jwttoken}`,
       };
 
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(requrl, payload, {
-            headers: headers
+            headers: headers,
           })
-          .then(response => {
+          .then((response) => {
             resolve(response.data.body);
           })
-          .catch(err => {
+          .catch((err) => {
             reject(err);
           });
       });
@@ -455,7 +456,7 @@ function FivePaisaClient(conf) {
     try {
       if (orderType === undefined) {
         throw new Error(
-          `No orderType specified, valid order types are "BUY" and "SELL"`
+          `No orderType specified, valid order types are "BUY" and "SELL"`,
         );
       }
 
@@ -464,7 +465,7 @@ function FivePaisaClient(conf) {
       }
       if (exchange == undefined) {
         throw new Error(
-          `No exchange specified, valid exchange types are "NSE" and "BSE"`
+          `No exchange specified, valid exchange types are "NSE" and "BSE"`,
         );
       }
       params = params || defaultOrderParams;
@@ -514,7 +515,7 @@ function FivePaisaClient(conf) {
     ExchType,
     RequestType,
     TriggerPriceForSL,
-    params
+    params,
   ) {
     try {
       params = params || defaultbocoParams;
@@ -571,10 +572,10 @@ function FivePaisaClient(conf) {
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(BO_CO_ROUTE, payload)
-          .then(response => {
+          .then((response) => {
             resolve(response.data.body);
           })
-          .catch(err => {
+          .catch((err) => {
             reject(err);
           });
       });
@@ -590,7 +591,7 @@ function FivePaisaClient(conf) {
     qty,
     exchange,
     exchangeOrderID,
-    params
+    params,
   ) {
     try {
       params = params || defaultOrderParams;
@@ -637,10 +638,10 @@ function FivePaisaClient(conf) {
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(BO_MOD_ROUTE, payload)
-          .then(response => {
+          .then((response) => {
             resolve(response.data.body);
           })
-          .catch(err => {
+          .catch((err) => {
             reject(err);
           });
       });
@@ -674,7 +675,7 @@ function FivePaisaClient(conf) {
     is_intraday,
     exchange,
     exchange_type,
-    params
+    params,
   ) {
     try {
       this.orderPayload.body.ExchOrderID = exchangeOrderID;
@@ -738,7 +739,7 @@ function FivePaisaClient(conf) {
       var payload = this.genericPayload;
 
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(ORDER_STATUS_ROUTE, payload).then(response => {
+        request_instance.post(ORDER_STATUS_ROUTE, payload).then((response) => {
           if (response.data.body.OrdStatusResLst === 0) {
             reject({ err: "No info found" });
           } else {
@@ -759,7 +760,7 @@ function FivePaisaClient(conf) {
       var payload = this.genericPayload;
 
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(MARKET_DEPTH_ROUTE, payload).then(response => {
+        request_instance.post(MARKET_DEPTH_ROUTE, payload).then((response) => {
           if (response.data.body.Data.length === 0) {
             reject({ err: "No info found" });
           } else {
@@ -782,7 +783,7 @@ function FivePaisaClient(conf) {
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(MARKET_DEPTH_BY_SYMBOL_ROUTE, payload)
-          .then(response => {
+          .then((response) => {
             if (response.data.body.Data.length === 0) {
               reject({ err: "No info found" });
             } else {
@@ -816,7 +817,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.TradeDetailList = tradeDetailList;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(TRADE_INFO_ROUTE, payload).then(response => {
+        request_instance.post(TRADE_INFO_ROUTE, payload).then((response) => {
           if (response.data.body.TradeDetail.length === 0) {
             reject({ err: "No info found" });
           } else {
@@ -837,7 +838,7 @@ function FivePaisaClient(conf) {
       var payload = this.marketpayload;
 
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(Market_ROUTE, payload).then(response => {
+        request_instance.post(Market_ROUTE, payload).then((response) => {
           if (response.data.body.Data.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -858,20 +859,20 @@ function FivePaisaClient(conf) {
       if (res === true) {
         var req_data = {
           ClientCode: CLIENT_CODE,
-          JWTToken: jwttoken
+          JWTToken: jwttoken,
         };
 
         request_instance
           .post(
             "https://Openapi.5paisa.com/VendorsAPI/Service1.svc/ValidateClientToken",
-            req_data
+            req_data,
           )
-          .then(response => {
+          .then((response) => {
             if (response.data.Message === "Success") {
               var setHeader = {
                 "Ocp-Apim-Subscription-Key": ocpKey,
                 "x-clientcode": CLIENT_CODE,
-                "x-auth-token": jwttoken
+                "x-auth-token": jwttoken,
               };
 
               var url = `https://openapi.5paisa.com/historical/${Exch}/${Exchtype}/${scrip}/${timeframe}?from=${from}&end=${to}`;
@@ -889,12 +890,12 @@ function FivePaisaClient(conf) {
                     "High",
                     "Low",
                     "Close",
-                    "Volume"
+                    "Volume",
                   ];
                   var df = pd.DataFrame(candleList, columns);
 
                   return df.show;
-                }
+                },
               );
             } else {
               return response.data;
@@ -913,7 +914,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(IDEAS_ROUTE, payload).then(response => {
+        request_instance.post(IDEAS_ROUTE, payload).then((response) => {
           if (response.data.body.Data.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -934,7 +935,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(IDEAS_ROUTE, payload).then(response => {
+        request_instance.post(IDEAS_ROUTE, payload).then((response) => {
           if (response.data.body.Data.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -955,7 +956,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(TRADEBOOK_ROUTE, payload).then(response => {
+        request_instance.post(TRADEBOOK_ROUTE, payload).then((response) => {
           if (response.data.body.TradeBookDetail.length === 0) {
             reject(response.data.body.Message);
           } else {
@@ -975,7 +976,7 @@ function FivePaisaClient(conf) {
       this.logincheck.head.LoginId = CLIENT_CODE;
       var payload = this.logincheck;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(LOGINCHECK_ROUTE, payload).then(response => {
+        request_instance.post(LOGINCHECK_ROUTE, payload).then((response) => {
           if (response.data.body.Status != 0) {
             reject(response.data.body.Message);
           } else {
@@ -1012,8 +1013,8 @@ function FivePaisaClient(conf) {
 
       websocketConnection = new WebSocket(weburl, {
         headers: {
-          Cookie: aspxauth[0]
-        }
+          Cookie: aspxauth[0],
+        },
       });
 
       websocketConnection.onerror = function() {
@@ -1063,16 +1064,16 @@ function FivePaisaClient(conf) {
     try {
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `bearer ${accessToken}`
+        Authorization: `bearer ${accessToken}`,
       };
       var payload = this.genericPayload;
 
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(MARKET_STATUS_ROUTE, payload, {
-            headers: headers
+            headers: headers,
           })
-          .then(response => {
+          .then((response) => {
             if (response.data.body.Data.length === 0) {
               reject(response.data.body);
             } else {
@@ -1095,7 +1096,7 @@ function FivePaisaClient(conf) {
       var payload = this.genericPayload;
 
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(ACCESS_TOKEN_ROUTE, payload).then(response => {
+        request_instance.post(ACCESS_TOKEN_ROUTE, payload).then((response) => {
           if (response.data.body.Message != "Success") {
             reject(response.data.body.Message);
           } else {
@@ -1123,14 +1124,14 @@ function FivePaisaClient(conf) {
       if (this.genericPayload.body.ClientCode != null) {
         const headers = {
           "Content-Type": "application/json",
-          Authorization: `bearer ${accessToken}`
+          Authorization: `bearer ${accessToken}`,
         };
         var promise = new Promise(function(resolve, reject) {
           request_instance
             .post(TRADE_HISTORY_ROUTE, payload, {
-              headers: headers
+              headers: headers,
             })
-            .then(response => {
+            .then((response) => {
               if (response.data.body.length === 0) {
                 reject(response.data.body);
               } else {
@@ -1154,7 +1155,7 @@ function FivePaisaClient(conf) {
       //   'Authorization': `bearer ${accessToken}`
       // }
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(GET_BASKET_ROUTE, payload).then(response => {
+        request_instance.post(GET_BASKET_ROUTE, payload).then((response) => {
           if (response.data.body.Status != 0) {
             reject(response.data.body.Message);
           } else {
@@ -1174,14 +1175,14 @@ function FivePaisaClient(conf) {
       var payload = this.genericPayload;
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `bearer ${accessToken}`
+        Authorization: `bearer ${accessToken}`,
       };
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(CREATE_BASKET_ROUTE, payload, {
-            headers: headers
+            headers: headers,
           })
-          .then(response => {
+          .then((response) => {
             if (response.data.body.Status != 0) {
               reject(response.data.body.Message);
             } else {
@@ -1202,7 +1203,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.NewBasketName = basketName;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(RENAME_BASKET_ROUTE, payload).then(response => {
+        request_instance.post(RENAME_BASKET_ROUTE, payload).then((response) => {
           if (response.data.body.Status != 0) {
             reject(response.data.body.Message);
           } else {
@@ -1222,7 +1223,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.BasketIDs = basketID;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(DELETE_BASKET_ROUTE, payload).then(response => {
+        request_instance.post(DELETE_BASKET_ROUTE, payload).then((response) => {
           if (response.data.body.Status != 0) {
             reject(response.data.body.Message);
           } else {
@@ -1242,7 +1243,7 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.BasketID = basketID;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(CLONE_BASKET_ROUTE, payload).then(response => {
+        request_instance.post(CLONE_BASKET_ROUTE, payload).then((response) => {
           if (response.data.body.Status != 0) {
             reject(response.data.body.Message);
           } else {
@@ -1262,13 +1263,15 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.BasketID = basketID;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(EXECUTE_BASKET_ROUTE, payload).then(response => {
-          if (response.data.body.Status != 0) {
-            reject(response.data.body.Message);
-          } else {
-            resolve(response.data.body);
-          }
-        });
+        request_instance
+          .post(EXECUTE_BASKET_ROUTE, payload)
+          .then((response) => {
+            if (response.data.body.Status != 0) {
+              reject(response.data.body.Message);
+            } else {
+              resolve(response.data.body);
+            }
+          });
       });
       return promise;
     } catch (err) {
@@ -1284,7 +1287,7 @@ function FivePaisaClient(conf) {
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(GET_ORDERIN_BASKET_ROUTE, payload)
-          .then(response => {
+          .then((response) => {
             if (response.data.body.Status != 0) {
               reject(response.data.body.Message);
             } else {
@@ -1307,7 +1310,7 @@ function FivePaisaClient(conf) {
     scripCode,
     delvIntra,
     basketIDs,
-    params
+    params,
   ) {
     try {
       params = params || basketOrderParams;
@@ -1348,7 +1351,7 @@ function FivePaisaClient(conf) {
       var payload = this.genericPayload;
 
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(ADD_BASKET_ROUTE, payload).then(response => {
+        request_instance.post(ADD_BASKET_ROUTE, payload).then((response) => {
           if (response.data.body.Status != 0) {
             reject(response.data.body.Message);
           } else {
@@ -1369,7 +1372,7 @@ function FivePaisaClient(conf) {
     scripData,
     convertQty,
     convertFrom,
-    convertTo
+    convertTo,
   ) {
     try {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
@@ -1386,7 +1389,7 @@ function FivePaisaClient(conf) {
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(POSITION_CONVERSION_ROUTE, payload)
-          .then(response => {
+          .then((response) => {
             if (response.data.body.Status != 0) {
               reject(response.data.body.Message);
             } else {
@@ -1407,7 +1410,7 @@ function FivePaisaClient(conf) {
 
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(GET_EXPIRY_ROUTE, payload).then(response => {
+        request_instance.post(GET_EXPIRY_ROUTE, payload).then((response) => {
           if (response.data.body.Status != 0) {
             reject(response.data.body.Message);
           } else {
@@ -1431,7 +1434,7 @@ function FivePaisaClient(conf) {
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(GET_OPTION_CHAIN_ROUTE, payload)
-          .then(response => {
+          .then((response) => {
             if (response.data.body.Status != 0) {
               reject(response.data.body.Message);
             } else {
@@ -1454,7 +1457,7 @@ function FivePaisaClient(conf) {
       var promise = new Promise(function(resolve, reject) {
         request_instance
           .post(CANCEL_BULK_ORDER_ROUTE, payload)
-          .then(response => {
+          .then((response) => {
             if (response.data.body.Status != 0) {
               reject(response.data.body.Message);
             } else {
@@ -1473,13 +1476,15 @@ function FivePaisaClient(conf) {
       this.genericPayload.body.ClientCode = CLIENT_CODE;
       var payload = this.genericPayload;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(SQUARE_OFF_ALL_ROUTE, payload).then(response => {
-          if (response.data.body.Status != 0) {
-            reject(response.data.body.Message);
-          } else {
-            resolve(response.data.body);
-          }
-        });
+        request_instance
+          .post(SQUARE_OFF_ALL_ROUTE, payload)
+          .then((response) => {
+            if (response.data.body.Status != 0) {
+              reject(response.data.body.Message);
+            } else {
+              resolve(response.data.body);
+            }
+          });
       });
       return promise;
     } catch (err) {
@@ -1490,7 +1495,7 @@ function FivePaisaClient(conf) {
   this.marketDepthToken = function(data, onmessagedisplay) {
     try {
       const headers = {
-        "Ocp-Apim-Subscription-Key": ocpKey
+        "Ocp-Apim-Subscription-Key": ocpKey,
       };
       request.post(
         { headers: headers, url: MARKET_DEPTH_TOKEN_ROUTE, method: "POST" },
@@ -1527,7 +1532,7 @@ function FivePaisaClient(conf) {
           };
 
           websocketConnection.onmessage = onmessagedisplay;
-        }
+        },
       );
     } catch (err) {
       console.log(err);
@@ -1536,5 +1541,5 @@ function FivePaisaClient(conf) {
 }
 module.exports = {
   FivePaisaClient: FivePaisaClient,
-  OrderValidityEnum: OrderValidityEnum
+  OrderValidityEnum: OrderValidityEnum,
 };
