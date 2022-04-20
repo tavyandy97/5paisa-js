@@ -33,7 +33,7 @@
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",
     "jsdoc": "^3.6.5",
-    "node-pandas": "^1.0.5",
+    "node-pandas": "github:stack-finance/node-pandas",
     "request": "^2.88.2",
     "tough-cookie": "^4.0.0"
   },
@@ -42,15 +42,19 @@
   "devDependencies": {
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",
-    "eslint": "^4.11.0",
-    "eslint-config-concise": "^0.15.0",
-    "eslint-config-concise-jest": "^0.15.0",
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "^5.0.0",
     "minami": "^1.2.3",
     "npm-run-all": "^4.1.2",
-    "prettier-eslint-cli": "^4.4.0",
+    "prettier": "^2.5.1",
+    "prettier-eslint-cli": "^5.0.1",
     "tough-cookie": "^4.0.0",
     "ws": "^8.4.0"
   },
@@ -86,10 +90,7 @@
   },
   "scripts": {
     "gendocs": "jsdoc --readme README.md --package package.json index.js const.js -d docs -t ./node_modules/minami/",
-    "lint": "eslint --ext js,md .",
-    "precommit": "lint-staged",
-    "prepush": "jest",
-    "test": "jest"
+    "precommit": "lint-staged"
   },
   "version": "0.0.17"
 }

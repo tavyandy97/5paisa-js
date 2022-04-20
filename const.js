@@ -18,9 +18,9 @@ const MARKET_PAYLOAD = {
   body: {
     Count: "",
     MarketFeedData: [],
-    ClientLoginType:0,
-    LastRequestTime:`/Date(${today})/`,
-    RefreshRate:"H"
+    ClientLoginType: 0,
+    LastRequestTime: `/Date(${today})/`,
+    RefreshRate: "H"
   }
 };
 
@@ -49,7 +49,6 @@ const LOGIN_PAYLOAD = {
   }
 };
 
-
 const ORDER_PLACEMENT_PAYLOAD = {
   head: {
     key: ""
@@ -69,64 +68,59 @@ const ORDER_PLACEMENT_PAYLOAD = {
     IsIOCOrder: false,
     IsIntraday: false,
     IsAHOrder: "N",
-    ValidTillDate: `/Date(${followingDay})/`,
+    // ValidTillDate: `/Date(${followingDay})/`,
     AppSource: 0
   }
 };
 
-LOGIN_CHECK_PAYLOAD={
-  head : {
-      requestCode:"5PLoginCheck",
-      key:"",
-      appVer:"1.0",
-      appName:"",
-      osName:"WEB",
-      LoginId:""
-      },
-  body:{
-      RegistrationID:""
-      }
+LOGIN_CHECK_PAYLOAD = {
+  head: {
+    requestCode: "5PLoginCheck",
+    key: "",
+    appVer: "1.0",
+    appName: "",
+    osName: "WEB",
+    LoginId: ""
+  },
+  body: {
+    RegistrationID: ""
   }
+};
 
-  WS_PAYLOAD={"Method":"",
-            "Operation":"",
-            "ClientCode":"",
-            "MarketFeedData":""}
+WS_PAYLOAD = { Method: "", Operation: "", ClientCode: "", MarketFeedData: "" };
 
-  OCP_KEY="c89fab8d895a426d9e00db380b433027"
+OCP_KEY = "c89fab8d895a426d9e00db380b433027";
 
-  BASKET_ORDER_PAYLOAD={
-      head: {
-        key: ""
-    },
-    body: {
-        ClientCode: "",
-        Exchange: "",
-        ExchangeType: "",
-        Price: "",
-        OrderType: "",
-        Qty: "",
-        ScripCode: "",
-        AtMarket: false,
-        StopLossPrice: "0",
-        IsStopLossOrder: false,
-        IOCOrder: false,
-        DelvIntra: "",
-        AppSource: "",
-        IsIntraday: false,
-        ValidTillDate: "/Date(1613129870000)/",
-        AHPlaced: "N",
-        PublicIP: "0.0.0.0",
-        DisQty: "0",
-        iOrderValidity: 0,
-        BasketIDs: []
-    
-
-  }}
- TOKEN_HEADERS={
-    'Ocp-Apim-Subscription-Key': 'c89fab8d895a426d9e00db380b433027',
-    
-    }
+BASKET_ORDER_PAYLOAD = {
+  head: {
+    key: ""
+  },
+  body: {
+    ClientCode: "",
+    Exchange: "",
+    ExchangeType: "",
+    Price: "",
+    OrderType: "",
+    Qty: "",
+    ScripCode: "",
+    AtMarket: false,
+    StopLossPrice: "0",
+    IsStopLossOrder: false,
+    IOCOrder: false,
+    DelvIntra: "",
+    AppSource: "",
+    IsIntraday: false,
+    ValidTillDate: "/Date(1613129870000)/",
+    AHPlaced: "N",
+    PublicIP: "0.0.0.0",
+    DisQty: "0",
+    iOrderValidity: 0,
+    BasketIDs: []
+  }
+};
+TOKEN_HEADERS = {
+  "Ocp-Apim-Subscription-Key": "c89fab8d895a426d9e00db380b433027"
+};
 /**
  * Enum for Order validity.
  * @readonly
@@ -145,11 +139,11 @@ module.exports = {
   genericPayload: GENERIC_PAYLOAD,
   loginPayload: LOGIN_PAYLOAD,
   orderPayload: ORDER_PLACEMENT_PAYLOAD,
-  marketpayload : MARKET_PAYLOAD,
+  marketpayload: MARKET_PAYLOAD,
   OrderValidityEnum: OrderValidityEnum,
   logincheck: LOGIN_CHECK_PAYLOAD,
   wspayload: WS_PAYLOAD,
-  basketOrderPayload : BASKET_ORDER_PAYLOAD,
-  tokenHeader:TOKEN_HEADERS,
-  ocpKey:OCP_KEY
+  basketOrderPayload: BASKET_ORDER_PAYLOAD,
+  tokenHeader: TOKEN_HEADERS,
+  ocpKey: OCP_KEY
 };

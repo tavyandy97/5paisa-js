@@ -1,8 +1,23 @@
 const crypto = require("crypto");
 
-const iv = new Buffer.from([83, 71, 26, 58, 54, 35, 22, 11,
-  83, 71, 26, 58, 54, 35, 22, 11]);
-
+const iv = new Buffer.from([
+  83,
+  71,
+  26,
+  58,
+  54,
+  35,
+  22,
+  11,
+  83,
+  71,
+  26,
+  58,
+  54,
+  35,
+  22,
+  11
+]);
 
 const AES256Encrypt = (key, text) => {
   const keyLen = 256;
@@ -27,17 +42,13 @@ const AES256Encrypt = (key, text) => {
 
     let encrypted = cipher.update(text, "utf8", "base64");
     encrypted += cipher.final("base64");
-    
+
     return encrypted;
   } catch (error) {
     console.log(error, "error in encrypt");
   }
 };
 
-
-
-
 module.exports = {
-  AES256Encrypt: AES256Encrypt,
- 
+  AES256Encrypt: AES256Encrypt
 };
