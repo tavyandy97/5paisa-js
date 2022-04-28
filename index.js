@@ -987,7 +987,7 @@ function FivePaisaClient(conf) {
             }
           })
           .catch((err) => {
-            console.err("Login check failed with error - ", err);
+            console.error("Login check failed with error - ", err);
             reject("Login check failed");
           });
       });
