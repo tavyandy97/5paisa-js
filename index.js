@@ -976,14 +976,20 @@ function FivePaisaClient(conf) {
       this.logincheck.head.LoginId = CLIENT_CODE;
       var payload = this.logincheck;
       var promise = new Promise(function(resolve, reject) {
-        request_instance.post(LOGINCHECK_ROUTE, payload).then((response) => {
-          if (response.data.body.Status != 0) {
-            reject(response.data.body.Message);
-          } else {
-            aspxauth = response.headers["set-cookie"][1].split(";");
-            resolve(aspxauth[0]);
-          }
-        });
+        request_instance
+          .post(LOGINCHECK_ROUTE, payload)
+          .then((response) => {
+            if (response.data.body.Status != 0) {
+              reject(response.data.body.Message);
+            } else {
+              aspxauth = response.headers["set-cookie"][1].split(";");
+              resolve(aspxauth[0]);
+            }
+          })
+          .catch((err) => {
+            console.err("Login check failed with error - ", err);
+            reject("Login check failed");
+          });
       });
 
       return promise;
