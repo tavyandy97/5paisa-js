@@ -1045,6 +1045,14 @@ function FivePaisaClient(conf) {
           console.log(err);
         }
       };
+
+      websocketConnection.onclose = function() {
+        try {
+          console.log("WebSocket Client Closed");
+        } catch (err) {
+          console.log(err);
+        }
+      };
     } catch (err) {
       console.log(err);
     }
