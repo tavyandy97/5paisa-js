@@ -1,22 +1,7 @@
 const crypto = require("crypto");
 
 const iv = new Buffer.from([
-  83,
-  71,
-  26,
-  58,
-  54,
-  35,
-  22,
-  11,
-  83,
-  71,
-  26,
-  58,
-  54,
-  35,
-  22,
-  11
+  83, 71, 26, 58, 54, 35, 22, 11, 83, 71, 26, 58, 54, 35, 22, 11,
 ]);
 
 const AES256Encrypt = (key, text) => {
@@ -49,6 +34,17 @@ const AES256Encrypt = (key, text) => {
   }
 };
 
+const cloneObject = (obj) => ({
+  ...obj,
+  ...Object.keys(obj).reduce((acc, curr) => {
+    acc[curr] = {
+      ...obj[curr],
+    };
+    return acc;
+  }, {}),
+});
+
 module.exports = {
-  AES256Encrypt: AES256Encrypt
+  cloneObject,
+  AES256Encrypt,
 };
