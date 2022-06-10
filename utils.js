@@ -14,7 +14,7 @@ const AES256Encrypt = (key, text) => {
       Uint8Array.from(iv),
       1000,
       keyLen + IVLen,
-      "sha1"
+      "sha1",
     );
 
     const aesKey = Buffer.allocUnsafe(32);
@@ -34,15 +34,7 @@ const AES256Encrypt = (key, text) => {
   }
 };
 
-const cloneObject = (obj) => ({
-  ...obj,
-  ...Object.keys(obj).reduce((acc, curr) => {
-    acc[curr] = {
-      ...obj[curr],
-    };
-    return acc;
-  }, {}),
-});
+const cloneObject = (obj) => JSON.parse(JSON.stringify(obj));
 
 module.exports = {
   cloneObject,
