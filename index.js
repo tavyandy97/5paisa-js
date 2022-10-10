@@ -22,7 +22,6 @@ const { AES128Encrypt, AES256Encrypt, cloneObject } = require("./utils");
 
 axiosCookieJarSupport(axios);
 
-const cookieJar = new tough.CookieJar();
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
 
@@ -109,6 +108,7 @@ function FivePaisaClient(conf) {
   let websocketConnection = null;
   let marketDepth_accessToken = "";
 
+  const cookieJar = new tough.CookieJar();
   const defaultOrderParams = {
     exchangeSegment: "C",
     isStopLossOrder: false,
