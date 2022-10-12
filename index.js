@@ -18,11 +18,10 @@ const {
   basketOrderPayload,
   ocpKey,
 } = require("./const");
-const { AES128Encrypt, AES256Encrypt } = require("./utils");
+const { AES128Encrypt, AES256Encrypt, cloneObject } = require("./utils");
 
 axiosCookieJarSupport(axios);
 
-const cookieJar = new tough.CookieJar();
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
 
@@ -85,23 +84,23 @@ function FivePaisaClient(conf) {
   const MARKET_DEPTH_TOKEN_ROUTE =
     "https://openapi.5paisa.com/marketfeed-token/token";
   var CLIENT_CODE = "";
-  this.loginPayload = loginPayload;
+  this.loginPayload = cloneObject(loginPayload);
   this.loginPayload.head.appName = conf.appName;
   this.loginPayload.head.key = conf.userKey;
   this.loginPayload.head.userId = conf.userId;
   this.loginPayload.head.password = conf.password;
-  this.genericPayload = genericPayload;
+  this.genericPayload = cloneObject(genericPayload);
   this.genericPayload.head.key = conf.userKey;
-  this.orderPayload = orderPayload;
+  this.orderPayload = cloneObject(orderPayload);
   this.orderPayload.head.key = conf.userKey;
   this.orderPayload.body.AppSource = conf.appSource;
-  this.marketpayload = marketpayload;
+  this.marketpayload = cloneObject(marketpayload);
   this.marketpayload.head.key = conf.userKey;
-  this.logincheck = logincheck;
+  this.logincheck = cloneObject(logincheck);
   this.logincheck.head.appName = conf.appName;
   this.logincheck.head.key = conf.userKey;
-  this.wspayload = wspayload;
-  this.basketOrderPayload = basketOrderPayload;
+  this.wspayload = cloneObject(wspayload);
+  this.basketOrderPayload = cloneObject(basketOrderPayload);
   this.basketOrderPayload.head.key = conf.userKey;
   let accessToken = "";
   let aspxauth = "";
@@ -109,6 +108,7 @@ function FivePaisaClient(conf) {
   let websocketConnection = null;
   let marketDepth_accessToken = "";
 
+  const cookieJar = new tough.CookieJar();
   const defaultOrderParams = {
     exchangeSegment: "C",
     isStopLossOrder: false,
@@ -230,7 +230,7 @@ function FivePaisaClient(conf) {
       this.loginPayload.body.Password = encrypt(encryptionKey, password);
       this.loginPayload.body.My2PIN = encrypt(encryptionKey, DOB);
 
-      var req = request_instance.post(LOGIN_ROUTE, loginPayload);
+      var req = request_instance.post(LOGIN_ROUTE, this.loginPayload);
 
       return req;
     } catch (err) {
