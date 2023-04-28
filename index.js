@@ -854,56 +854,59 @@ function FivePaisaClient(conf) {
 
   this.historicalData = function(Exch, Exchtype, scrip, timeframe, from, to) {
     try {
-      var timeList = ["1m", "5m", "10m", "15m", "30m", "60m", "1d"];
-      var res = timeList.includes(timeframe);
-      if (res === true) {
-        var req_data = {
-          ClientCode: CLIENT_CODE,
-          JWTToken: jwttoken,
-        };
+      var promise = new Promise(function(resolve, reject) {
+        var timeList = ["1m", "5m", "10m", "15m", "30m", "60m", "1d"];
+        var res = timeList.includes(timeframe);
+        if (res === true) {
+          var req_data = {
+            ClientCode: CLIENT_CODE,
+            JWTToken: jwttoken,
+          };
 
-        request_instance
-          .post(
-            "https://Openapi.5paisa.com/VendorsAPI/Service1.svc/ValidateClientToken",
-            req_data,
-          )
-          .then((response) => {
-            if (response.data.Message === "Success") {
-              var setHeader = {
-                "Ocp-Apim-Subscription-Key": ocpKey,
-                "x-clientcode": CLIENT_CODE,
-                "x-auth-token": jwttoken,
-              };
+          request_instance
+            .post(
+              "https://Openapi.5paisa.com/VendorsAPI/Service1.svc/ValidateClientToken",
+              req_data,
+            )
+            .then((response) => {
+              if (response.data.Message === "Success") {
+                var setHeader = {
+                  "Ocp-Apim-Subscription-Key": ocpKey,
+                  "x-clientcode": CLIENT_CODE,
+                  "x-auth-token": jwttoken,
+                };
 
-              var url = `https://openapi.5paisa.com/historical/${Exch}/${Exchtype}/${scrip}/${timeframe}?from=${from}&end=${to}`;
+                var url = `https://openapi.5paisa.com/historical/${Exch}/${Exchtype}/${scrip}/${timeframe}?from=${from}&end=${to}`;
 
-              var headers = setHeader;
+                var headers = setHeader;
 
-              request.get(
-                { headers: headers, url: url, method: "GET" },
-                function(e, r, body) {
-                  var bodyValues = JSON.parse(body);
-                  var candleList = bodyValues.data.candles;
-                  var columns = [
-                    "Datetime",
-                    "Open",
-                    "High",
-                    "Low",
-                    "Close",
-                    "Volume",
-                  ];
-                  var df = pd.DataFrame(candleList, columns);
+                request.get(
+                  { headers: headers, url: url, method: "GET" },
+                  function(e, r, body) {
+                    var bodyValues = JSON.parse(body);
+                    var candleList = bodyValues.data.candles;
+                    var columns = [
+                      "Datetime",
+                      "Open",
+                      "High",
+                      "Low",
+                      "Close",
+                      "Volume",
+                    ];
+                    var df = pd.DataFrame(candleList, columns);
+                    resolve(df);
+                  },
+                );
+              } else {
+                return reject(response.data);
+              }
+            });
+        } else {
+          reject("Time frame is invalid.");
+        }
+      });
 
-                  return df.show;
-                },
-              );
-            } else {
-              return response.data;
-            }
-          });
-      } else {
-        return "Time frame is invalid.";
-      }
+      return promise;
     } catch (err) {
       console.log(err);
     }
